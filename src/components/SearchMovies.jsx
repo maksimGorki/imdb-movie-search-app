@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 import SearchBox from "./SearchBox";
 import MovieDeck from "./MovieDeck";
@@ -10,15 +10,25 @@ const getApiEndpoint = (query, page) => {
   return url;
 };
 
-const SearchMovies = () => {
-  const [query, setQuery] = useState("");
-  const { isLoading, data: movies } = useData(query, getApiEndpoint);
+const SearchMovies = ({ query, setQuery }) => {
+  const { errorMsg, response, isLoading, data: movies } = useData(
+    query,
+    getApiEndpoint
+  );
 
   return (
     <>
       <SearchBox query={query} setQuery={setQuery} />
       <div className="horizontalRule"></div>
-      {isLoading ? <LoadingPage /> : <MovieDeck movies={movies} />}
+      {response ? (
+        isLoading ? (
+          <LoadingPage />
+        ) : (
+          <MovieDeck movies={movies} />
+        )
+      ) : (
+        <h1>{errorMsg}</h1>
+      )}
     </>
   );
 };
